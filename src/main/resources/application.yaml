@@ -1,0 +1,22 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/auth-service
+    username: postgres
+    password: ""
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+jwt:
+  secret: isugv9egrcieubviugewfivbckwefbviuwebrvywgcuybiugeyucgiqeguyiewgicugeuwygcyuevwuycvuyewvfcuyfgqwuyefdguqwyefgduyqwfgeiuywqhecofibqwiuegiuyqwegfuiqwegfiugqweiufygq2uyefuyqwrgfiuyqwegvfuewvgfuy
+
+springdoc:
+  api-docs:
+    path: /v1/api-docs
+  swagger-ui:
+    path: /swagger-ui/index.html
