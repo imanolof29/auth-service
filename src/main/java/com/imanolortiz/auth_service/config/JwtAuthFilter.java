@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,24 +31,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Optional.ofNullable(request.getHeader("Authentication"))
+        Optional.ofNullable(request.getHeader("Authorization"))
                 .filter(header -> !header.isBlank())
                 .map(header -> header.substring(7))
-                .map(jwtService::extractedUserId)
+                .map(jwtService::extractUserId)
                 .flatMap(userId -> userRepository.findById(Long.valueOf(userId)))
                 .ifPresent(userDetails -> {
                     request.setAttribute("X-User-Id", userDetails.getId());
+                    request.setAttribute("X-User-Role", userDetails.getRole());
                     processAuthentication(request, userDetails);
                 });
+
         filterChain.doFilter(request, response);
     }
 
-    private void processAuthentication(HttpServletRequest request, UserModel userDetails){
+    private void processAuthentication(HttpServletRequest request, UserDetails userDetails){
         String jwtToken = request.getHeader("Authentication").substring(7);
         Optional.of(jwtToken)
                 .filter(token -> !jwtService.isExpired(token))
                 .ifPresent(token -> {
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getAuthorities());
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 });

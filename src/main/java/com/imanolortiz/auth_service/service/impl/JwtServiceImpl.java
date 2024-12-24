@@ -50,7 +50,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public Integer extractedUserId(String token) {
+    public Integer extractUserId(String token) {
         try{
             return Integer.parseInt(getClaims(token).getSubject());
         }catch(Exception e){

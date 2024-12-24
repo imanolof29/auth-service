@@ -7,5 +7,5 @@ public interface JwtService {
     AuthResponseDto generateToken(Long id);
     Claims getClaims(String token);
     boolean isExpired(String token);
-    Integer extractedUserId(String token);
+    Integer extractUserId(String token);
 }
