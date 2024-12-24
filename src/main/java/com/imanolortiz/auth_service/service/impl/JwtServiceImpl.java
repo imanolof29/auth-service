@@ -15,7 +15,7 @@ public class JwtServiceImpl implements JwtService {
 
     private final String tokenSecret;
 
-    JwtServiceImpl(@Value("${{jwt.secret}}") String tokenSecret){
+    JwtServiceImpl(@Value("${jwt.secret}") String tokenSecret){
         this.tokenSecret = tokenSecret;
     }
 

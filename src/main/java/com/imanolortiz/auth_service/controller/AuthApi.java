@@ -2,6 +2,7 @@ package com.imanolortiz.auth_service.controller;
 
 import com.imanolortiz.auth_service.commons.constants.ApiPathConstants;
 import com.imanolortiz.auth_service.commons.dtos.AuthResponseDto;
+import com.imanolortiz.auth_service.commons.dtos.LoginRequestDto;
 import com.imanolortiz.auth_service.commons.dtos.UserRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,11 @@ public interface AuthApi {
     @PostMapping(value = "/register")
     ResponseEntity<AuthResponseDto> createUser(
             @RequestBody @Valid UserRequest userRequest
+    );
+
+    @PostMapping(value = "/login")
+    ResponseEntity<AuthResponseDto> loginUser(
+            @RequestBody @Valid LoginRequestDto loginRequest
     );
 
 

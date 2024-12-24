@@ -1,6 +1,7 @@
 package com.imanolortiz.auth_service.controller.impl;
 
 import com.imanolortiz.auth_service.commons.dtos.AuthResponseDto;
+import com.imanolortiz.auth_service.commons.dtos.LoginRequestDto;
 import com.imanolortiz.auth_service.commons.dtos.UserRequest;
 import com.imanolortiz.auth_service.controller.AuthApi;
 import com.imanolortiz.auth_service.service.AuthService;
@@ -20,4 +21,11 @@ public class AuthController implements AuthApi {
     public ResponseEntity<AuthResponseDto> createUser(UserRequest userRequest) {
         return ResponseEntity.ok(authService.createUser(userRequest));
     }
+
+    @Override
+    public ResponseEntity<AuthResponseDto> loginUser(LoginRequestDto loginRequest) {
+        return ResponseEntity.ok(authService.loginUser(loginRequest));
+    }
+
+
 }
