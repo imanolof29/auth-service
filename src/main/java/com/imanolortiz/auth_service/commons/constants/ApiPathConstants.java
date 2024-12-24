@@ -6,4 +6,6 @@ public class ApiPathConstants {
 
     public static final String AUTH_ROUTE = "/auth";
 
+    public static final String USER_ROUTE = "/user";
+
 }
