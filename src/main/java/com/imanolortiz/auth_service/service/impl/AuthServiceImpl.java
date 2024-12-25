@@ -7,6 +7,7 @@ import com.imanolortiz.auth_service.commons.entities.UserModel;
 import com.imanolortiz.auth_service.repository.UserRepository;
 import com.imanolortiz.auth_service.service.AuthService;
 import com.imanolortiz.auth_service.service.JwtService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,9 +19,12 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtService jwtService;
 
-    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService){
+    private final PasswordEncoder passwordEncoder;
+
+    public AuthServiceImpl(UserRepository userRepository, JwtService jwtService, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -34,16 +38,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDto loginUser(LoginRequestDto loginRequest) {
-        return Optional.of(loginRequest)
-                .map(request -> authenticateUser(loginRequest.getEmail(), loginRequest.getPassword()))
-                .map(user -> jwtService.generateToken(user.getId()))
+        return Optional.of(loginRequest.getEmail())
+                .map(userRepository::findByEmail)
+                .filter(user -> passwordEncoder.matches(loginRequest.getPassword(), user.get().getPassword()))
+                .map(user -> jwtService.generateToken(user.get().getId()))
                 .orElseThrow(() -> new RuntimeException("Login error"));
-    }
-
-    private UserModel authenticateUser(String email, String password){
-        return userRepository.findByEmail(email)
-                .filter(user -> user.getPassword().equals(password))
-                .orElseThrow(() -> new RuntimeException("Invalid email or password"));
     }
 
 
@@ -51,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
         return UserModel
                 .builder()
                 .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
+                .password(passwordEncoder.encode(userRequest.getPassword()))
                 .name(userRequest.getName())
                 .role("USER")
                 .build();

@@ -46,7 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private void processAuthentication(HttpServletRequest request, UserDetails userDetails){
-        String jwtToken = request.getHeader("Authentication").substring(7);
+        String jwtToken = request.getHeader("Authorization").substring(7);
         Optional.of(jwtToken)
                 .filter(token -> !jwtService.isExpired(token))
                 .ifPresent(token -> {

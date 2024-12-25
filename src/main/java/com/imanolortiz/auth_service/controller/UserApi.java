@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(ApiPathConstants.V1_ROUTE + ApiPathConstants.USER_ROUTE)
 public interface UserApi {
 
-    @GetMapping(value = "/{userId}")
-    ResponseEntity<UserDto> getUser(@PathVariable Long userId);
+    @GetMapping(value = "/user-info")
+    ResponseEntity<UserDto> getUser(@RequestAttribute("X-User-Id") Long userId);
 
-    @DeleteMapping(value = "/{userId}")
-    ResponseEntity<Void> deleteUser(@PathVariable Long userId);
+    @DeleteMapping(value = "/delete")
+    ResponseEntity<Void> deleteUser(@RequestAttribute("X-User-Id") Long userId);
 
-    @PutMapping(value = "/{userId}")
-    ResponseEntity<Void> updateUser(@PathVariable Long userId, @RequestBody UpdateUserDto dto);
+    @PutMapping(value = "/update")
+    ResponseEntity<Void> updateUser(@RequestAttribute("X-User-Id") Long userId, @RequestBody UpdateUserDto dto);
 
 }
